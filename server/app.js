@@ -45,7 +45,7 @@ app.post("/api/fetchStockData", (req, res) => {
     axios
       .get(reqUrl, {
         headers: {
-          Authorization: `Bearer ${process.env.POLYGON_API_KEY}`,
+          Authorization: `Bearer 1npmowdp5TIl7KR4p4D7Vm0oOWWapWTf`,
         },
       })
       .then((data) => {
