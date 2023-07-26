@@ -12,6 +12,16 @@ const Form = ({ setStockDetails, setIsLoading }) => {
     // Perform any actions you need with the input values
     // For this example, we'll just display an alert with the entered values.
     try {
+      if (new Date(selectedDate) > new Date().getTime()) {
+        setIsLoading(false);
+        setStockDetails({
+          errorCode: 1,
+          errorMessage:
+            "You are requesting future date, current Polygon not support this plan",
+          data: null,
+        });
+        return;
+      }
       fetch("http://localhost:5000/api/fetchStockData", {
         method: "POST",
         body: JSON.stringify({ stockSymbol: stockSymbol, date: selectedDate }),
