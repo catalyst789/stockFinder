@@ -35,38 +35,54 @@ app.post("/api/fetchStockData", (req, res) => {
   // YOUR CODE GOES HERE, PLEASE DO NOT EDIT ANYTHING OUTSIDE THIS FUNCTION
   const resObj = {
     errorCode: 0,
-    errorMessage: 'Successfully Retrieved',
-    data: null
-  }
+    errorMessage: "",
+    data: null,
+  };
   try {
     const { stockSymbol, date } = req.body;
-    console.log({stockSymbol, date});
+    console.log({ stockSymbol, date });
     const reqUrl = `https://api.polygon.io/v1/open-close/${stockSymbol}/${date}?adjusted=true`;
     axios
       .get(reqUrl, {
         headers: {
-          Authorization: `Bearer 1npmowdp5TIl7KR4p4D7Vm0oOWWapWTf`,
+          Authorization: `Bearer MY5Gptawh00nP0aprFeKrm4DMcXceleT`,
         },
       })
       .then((data) => {
         resObj.errorCode = 0;
-        resObj.errorMessage = 'Successfully Retrieved';
+        resObj.errorMessage = "Successfully Retrieved";
         resObj.data = data.data;
         res.status(200).json(resObj);
       })
       .catch((error) => {
-          resObj.errorCode = 1;
-          resObj.errorMessage = 'Failed';
-          resObj.data = null;
-        if(JSON.stringify(error.response.status).startsWith('4')){
-          resObj.errorMessage = error
+        resObj.errorCode = 1;
+        resObj.errorMessage = "Some Error Occurred";
+        resObj.data = null;
+        if (JSON.stringify(error.response.status).startsWith("4")) {
+          if (error.response.status === 429) {
+            resObj.errorMessage =
+              "It looks like you're getting an status code 429. You're likely going over the rate limit of 5 requests per minute which comes with the Basic plans";
+            res.status(404).json(resObj);
+            return;
+          } else if (error.response.status === 401) {
+            resObj.errorMessage = "Polygon API Key Expired";
+            res.status(404).json(resObj);
+            return;
+          } else if (error.response.status === 400) {
+            resObj.errorMessage = "No Details found for your request";
+            res.status(404).json(resObj);
+            return;
+          }
+          resObj.errorMessage = "Polygon Server Issue";
           res.status(404).json(resObj);
           return;
         }
         resObj.errorMessage = error;
         res.status(500).json(resObj);
+        return;
       });
   } catch (error) {
+    resObj.errorMessage = "Some Error Occurred";
     return res.status(500).send(resObj);
   }
 });

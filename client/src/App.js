@@ -28,7 +28,9 @@ function App() {
           </div>
         ) : (
           <h3 className={styles.errorMessage}>
-            Unable to find details for your request..!
+            {stockDetails?.errorMessage
+              ? stockDetails.errorMessage
+              : "Something went wrong"}
           </h3>
         )
       ) : (
