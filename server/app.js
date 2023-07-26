@@ -45,7 +45,7 @@ app.post("/api/fetchStockData", (req, res) => {
     axios
       .get(reqUrl, {
         headers: {
-          Authorization: `Bearer MY5Gptawh00nP0aprFeKrm4DMcXceleT`,
+          Authorization: `Bearer YA3xzrb6pTrBpih6UxkicYiePRyVZBaC`,
         },
       })
       .then((data) => {
